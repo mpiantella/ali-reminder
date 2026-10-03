@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/tabler-icons.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--surface-0); color: var(--text-primary); }
+    
+    :root {
+      --drexel-blue: #003366;
+      --drexel-blue-light: #e8f0f7;
+      --drexel-gold: #FFB81C;
+      --drexel-gold-light: #fff8e6;
+      --surface-0: #fafaf9;
+      --surface-1: #f5f5f4;
+      --surface-2: #ffffff;
+      --text-primary: #1c1c1a;
+      --text-secondary: #78716b;
+      --text-muted: #a8a39e;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.12);
+      --accent: var(--drexel-blue);
+      --accent-light: var(--drexel-blue-light);
+      --success: #0f6e56;
+      --success-light: #e1f5ee;
+      --warning: #ba7517;
+      --warning-light: #faeeda;
+      --radius: 8px;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --surface-0: #1c1c1a;
+        --surface-1: #262622;
+        --surface-2: #2c2c2a;
+        --text-primary: #fffcf9;
+        --text-secondary: #b5aea7;
+        --text-muted: #888780;
+        --border: rgba(255, 255, 255, 0.08);
+        --border-strong: rgba(255, 255, 255, 0.12);
+        --accent-light: #0a1f2e;
+      }
+    }
+    
+    .container { max-width: 480px; margin: 0 auto; padding: 16px; }
+    
+    .sync-status {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 12px;
+      min-height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    
+    .sync-status.synced { color: var(--success); }
+    .sync-status.syncing { color: var(--drexel-blue); }
+    .sync-indicator { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    
+    .header {
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--drexel-blue) 0%, #004a8a 100%);
+      border-radius: var(--radius);
+      padding: 24px;
+      color: #ffffff;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 4px;
+      letter-spacing: -0.5px;
+    }
+    
+    .header-subtitle {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0;
+    }
+    
+    .header-accent {
+      display: inline-block;
+      background: var(--drexel-gold);
+      color: var(--drexel-blue);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .progress-section {
+      margin-bottom: 20px;
+      background: var(--surface-2);
+      border: 2px solid var(--drexel-blue);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    
+    .progress-label {
+      font-size: 13px;
+      color: var(--drexel-blue);
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: var(--drexel-blue-light);
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--drexel-blue) 0%, var(--drexel-gold) 100%);
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+    
+    .progress-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--drexel-blue);
+    }
+    
+    .event-section {
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    
+    .event-header {
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      transition: background 0.2s;
+      user-select: none;
+      border-left: 4px solid var(--drexel-blue);
+    }
+    
+    .event-header:hover {
+      background: var(--drexel-blue-light);
+    }
+    
+    .event-header.open {
+      background: var(--drexel-blue-light);
+    }
+    
+    .event-header.priority {
+      border-left: 4px solid var(--drexel-gold);
+    }
+    
+    .event-header.priority:hover {
+      background: var(--drexel-gold-light);
+    }
+    
+    .event-title-block { flex: 1; }
+    
+    .event-date {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--drexel-blue);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    
+    .event-header.priority .event-date {
+      color: #d99e00;
+    }
+    
+    .event-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0;
+      color: var(--text-primary);
+    }
+    
+    .event-status {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    
+    .event-icon {
+      font-size: 20px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      color: var(--drexel-blue);
+    }
+    
+    .event-header.priority .event-icon {
+      color: var(--drexel-gold);
+    }
+    
+    .event-stat {
+      display: inline-block;
+      background: var(--drexel-blue-light);
+      color: var(--drexel-blue);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    
+    .event-header.priority .event-stat {
+      background: var(--drexel-gold-light);
+      color: #d99e00;
+    }
+    
+    .event-toggle {
+      font-size: 18px;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--drexel-blue);
+    }
+    
+    .event-header.priority .event-toggle {
+      color: var(--drexel-gold);
+    }
+    
+    .event-header.open .event-toggle {
+      transform: rotate(180deg);
+    }
+    
+    .event-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .event-header.open + .event-content {
+      max-height: 2000px;
+    }
+    
+    .content-section {
+      padding: 0 16px 12px;
+    }
+    
+    .content-section:first-child {
+      padding-top: 12px;
+    }
+    
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--drexel-blue);
+      letter-spacing: 0.5px;
+      margin: 12px 0 8px;
+    }
+    
+    .action-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      padding: 8px;
+      background: var(--surface-1);
+      border-radius: 4px;
+      font-size: 13px;
+      align-items: flex-start;
+    }
+    
+    .action-icon {
+      margin-top: 2px;
+      color: var(--drexel-blue);
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .action-text {
+      color: var(--text-primary);
+    }
+    
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: var(--surface-1);
+      border-radius: 4px;
+      color: var(--drexel-blue);
+      text-decoration: none;
+      font-size: 13px;
+      margin-bottom: 6px;
+      transition: all 0.2s;
+      border: 0.5px solid transparent;
+      font-weight: 500;
+    }
+    
+    .resource-link:hover {
+      background: var(--drexel-blue-light);
+      border-color: var(--drexel-blue);
+      color: var(--drexel-blue);
+    }
+    
+    .resource-link:last-child {
+      margin-bottom: 0;
+    }
+    
+    .resource-link .icon {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    
+    .resource-link .text {
+      flex: 1;
+    }
+    
+    .resource-link .arrow {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .contact-info {
+      background: var(--drexel-blue-light);
+      border-left: 3px solid var(--drexel-blue);
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    
+    .contact-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--drexel-blue);
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    
+    .contact-detail {
+      font-size: 13px;
+      margin: 4px 0;
+      color: var(--text-primary);
+    }
+    
+    .contact-phone {
+      color: var(--drexel-blue);
+      font-weight: 600;
+    }
+    
+    .checklist-section {
+      background: var(--surface-2);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 20px;
+      overflow: hidden;
+    }
+    
+    .checklist-header {
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 14px;
+      background: linear-gradient(90deg, var(--drexel-blue-light) 0%, transparent 100%);
+      user-select: none;
+      color: var(--drexel-blue);
+      border-left: 4px solid var(--drexel-blue);
+    }
+    
+    .checklist-header:hover {
+      background: var(--drexel-blue-light);
+    }
+    
+    .checklist-toggle {
+      font-size: 18px;
+      transition: transform 0.2s;
+      color: var(--drexel-blue);
+    }
+    
+    .checklist-header.open .checklist-toggle {
+      transform: rotate(180deg);
+    }
+    
+    .checklist-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding: 0 16px;
+    }
+    
+    .checklist-header.open + .checklist-content {
+      max-height: 2000px;
+    }
+    
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 0.5px solid var(--border);
+      cursor: pointer;
+    }
+    
+    .task-item:last-child {
+      border-bottom: none;
+    }
+    
+    .task-item.done {
+      opacity: 0.6;
+    }
+    
+    .task-item.done .task-text {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+    }
+    
+    .task-checkbox {
+      width: 20px;
+      height: 20px;
+      border: 0.5px solid var(--border-strong);
+      border-radius: 4px;
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      transition: all 0.2s;
+    }
+    
+    .task-item.done .task-checkbox {
+      background: var(--drexel-blue);
+      border-color: var(--drexel-blue);
+      color: #ffffff;
+    }
+    
+    .task-content {
+      flex: 1;
+    }
+    
+    .task-text {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    
+    .task-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+      padding-top: 16px;
+    }
+    
+    .button {
+      flex: 1;
+      padding: 12px 16px;
+      border: 0.5px solid var(--border-strong);
+      background: var(--surface-1);
+      color: var(--text-primary);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    
+    .button:hover {
+      background: var(--surface-2);
+      border-color: var(--border-strong);
+    }
+    
+    .button.primary {
+      background: var(--drexel-blue);
+      color: #ffffff;
+      border-color: var(--drexel-blue);
+    }
+    
+    .button.primary:hover {
+      background: #002449;
+      border-color: #002449;
+    }
+    
+    .button .icon {
+      font-size: 16px;
+    }
+    
+    .copy-status {
+      font-size: 12px;
+      color: var(--drexel-blue);
+      text-align: center;
+      margin-top: 8px;
+      min-height: 16px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="sync-status" id="syncStatus">
+    <span class="sync-indicator"></span>
+    <span>Connecting...</span>
+  </div>
+
+  <div class="header">
+    <h1>Co-op Planning Guide</h1>
+    <div class="header-subtitle">Robotics Engineering | Drexel University</div>
+    <div class="header-subtitle">Spring/Summer 2027</div>
+    <div class="header-accent">Action plan with resources</div>
+  </div>
+  
+  <div class="progress-section">
+    <div class="progress-label">Overall progress</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+    </div>
+    <div class="progress-text"><span id="completedCount">0</span> of <span id="totalCount">12</span> tasks complete</div>
+  </div>
+  
+  <!-- Oct 7 Event -->
+  <div class="event-section">
+    <div class="event-header" onclick="toggleEvent(this)">
+      <div class="event-title-block">
+        <div class="event-date">October 7, 2026</div>
+        <div class="event-title">Virtual All-Majors Career Fair</div>
+        <div class="event-status">Attend + get contacts from companies</div>
+        <div class="event-stat">Est. 1 hour</div>
+      </div>
+      <div class="event-icon"><i class="ti ti-calendar"></i></div>
+      <div class="event-toggle"><i class="ti ti-chevron-down"></i></div>
+    </div>
+    <div class="event-content">
+      <div class="content-section">
+        <div class="section-title">Before the fair</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Prep résumé</strong> — Make sure it's accurate with your technical skills, projects, and tools</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Update LinkedIn</strong> — Photo, Drexel, robotics, graduation year, technical skills visible</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Prepare 30-second intro</strong> — "I'm a robotics engineer interested in [your area], particularly working with [tools]"</div>
+        </div>
+      </div>
+      <div class="content-section">
+        <div class="section-title">During the fair</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Attend and connect with at least 3 companies</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Get company reps' emails or ask for business cards</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Take notes on which companies seemed most interesting</div>
+        </div>
+      </div>
+      <div class="content-section">
+        <div class="section-title">Resources</div>
+        <a href="https://drexel.edu/scdc/about/events/career-fairs" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">Career fair schedule & details</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://drexel.edu/scdc/professional-resources/job-search" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">How to work a career fair</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      <div class="content-section">
+        <div class="contact-info">
+          <div class="contact-label">Stuck?</div>
+          <div class="contact-detail">Steinbright Career Center</div>
+          <div class="contact-phone">215-895-2185</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Oct 14 Event -->
+  <div class="event-section">
+    <div class="event-header priority" onclick="toggleEvent(this)">
+      <div class="event-title-block">
+        <div class="event-date">October 14, 2026</div>
+        <div class="event-title">In-Person STEM Career Fair</div>
+        <div class="event-status">Your priority event—robotics companies attend</div>
+        <div class="event-stat">Est. 2 hours</div>
+      </div>
+      <div class="event-icon"><i class="ti ti-star"></i></div>
+      <div class="event-toggle"><i class="ti ti-chevron-down"></i></div>
+    </div>
+    <div class="event-content">
+      <div class="content-section">
+        <div class="section-title">Before the fair</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Register for the fair</strong> — Use SCDCOnline or Drexel's registration link</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Research robotics companies attending</strong> — Look up 5-7 companies you want to meet</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Prepare personalized intro for each</strong> — "I'm interested in your work with [specific project/tech]"</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text">Bring 15-20 printed résumés</div>
+        </div>
+      </div>
+      <div class="content-section">
+        <div class="section-title">After the fair</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Follow up with recruiters within 24 hours</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Connect with them on LinkedIn</div>
+        </div>
+      </div>
+      <div class="content-section">
+        <div class="section-title">Resources</div>
+        <a href="https://drexel.edu/scdc/about/events/career-fairs" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">STEM Career Fair details & date</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://drexel.edu/scdc/professional-resources/interviewing/essentials" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">Drexel networking guide</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://www.linkedin.com/" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">LinkedIn search for companies</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Oct 15 Event -->
+  <div class="event-section">
+    <div class="event-header" onclick="toggleEvent(this)">
+      <div class="event-title-block">
+        <div class="event-date">October 15, 2026</div>
+        <div class="event-title">In-Person All-Majors Career Fair</div>
+        <div class="event-status">Broad recruiting — expand your options</div>
+        <div class="event-stat">Est. 2 hours</div>
+      </div>
+      <div class="event-icon"><i class="ti ti-calendar"></i></div>
+      <div class="event-toggle"><i class="ti ti-chevron-down"></i></div>
+    </div>
+    <div class="event-content">
+      <div class="content-section">
+        <div class="section-title">What to do</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Attend and meet companies outside your immediate area (defense, automotive, medical devices, aerospace often hire robotics)</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Follow up within 24 hours</div>
+        </div>
+      </div>
+      <div class="content-section">
+        <div class="section-title">Resources</div>
+        <a href="https://drexel.edu/scdc/about/events/career-fairs" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">All-Majors Career Fair details</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Oct 23 Event -->
+  <div class="event-section">
+    <div class="event-header" onclick="toggleEvent(this)">
+      <div class="event-title-block">
+        <div class="event-date">October 23, 2026</div>
+        <div class="event-title">A-Round Opens on SCDCOnline</div>
+        <div class="event-status">Official employer recruiting starts</div>
+        <div class="event-stat">Ongoing</div>
+      </div>
+      <div class="event-icon"><i class="ti ti-rocket"></i></div>
+      <div class="event-toggle"><i class="ti ti-chevron-down"></i></div>
+    </div>
+    <div class="event-content">
+      <div class="content-section">
+        <div class="section-title">What to do</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Check SCDCOnline daily for new job postings</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Apply to positions that match your interests (we selected 2-3 areas)</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Watch for interview invitations and respond quickly</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-circle-check"></i></div>
+          <div class="action-text">Note: If Drexel grants an interview, you must attend or contact your advisor</div>
+        </div>
+      </div>
+      <div class="content-section">
+        <div class="section-title">Resources</div>
+        <a href="https://drexel.edu/scdc/co-op/policies/scdconline-participation/" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">SCDCOnline participation rules</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://drexel.edu/scdc/co-op/undergraduate/calendars" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">Co-op calendar & key dates</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      <div class="content-section">
+        <div class="contact-info">
+          <div class="contact-label">Important</div>
+          <div class="contact-detail">Check SCDCOnline at least 2-3 times per week once A-Round opens</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Prep Section -->
+  <div class="event-section">
+    <div class="event-header" onclick="toggleEvent(this)">
+      <div class="event-title-block">
+        <div class="event-date">Do this ASAP</div>
+        <div class="event-title">Foundation prep (This week)</div>
+        <div class="event-status">Get your ducks in a row before fairs</div>
+      </div>
+      <div class="event-icon"><i class="ti ti-checklist"></i></div>
+      <div class="event-toggle"><i class="ti ti-chevron-down"></i></div>
+    </div>
+    <div class="event-content">
+      <div class="content-section">
+        <div class="section-title">Résumé & LinkedIn</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Update résumé</strong> — Add technical skills, projects, tools (C++, ROS, Arduino, MATLAB, etc.)</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Polish GitHub</strong> — Pin 2-3 best projects, add README files explaining what you built</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Set up LinkedIn</strong> — Profile photo, education, skills, projects</div>
+        </div>
+        <a href="https://drexel.edu/scdc/professional-resources/job-search" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">Drexel résumé resources</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      <div class="content-section">
+        <div class="section-title">Drexel setup</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Log into SCDCOnline</strong> — Confirm you have access to Spring/Summer 2027 search</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Find your co-op advisor</strong> — Will be assigned in SCDCOnline</div>
+        </div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Complete intro meeting</strong> — Required by Drexel for co-op eligibility</div>
+        </div>
+        <a href="https://drexel.edu/scdc/co-op/policies/co-op-eligibility" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">Co-op eligibility checklist</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      <div class="content-section">
+        <div class="section-title">Job search strategy</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Pick 2-3 interest areas</strong> — e.g., autonomous systems, embedded systems, controls, computer vision, manufacturing automation</div>
+        </div>
+        <a href="https://www.linkedin.com/jobs" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">LinkedIn job search</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      <div class="content-section">
+        <div class="section-title">Interview prep</div>
+        <div class="action-item">
+          <div class="action-icon"><i class="ti ti-square-rounded-check"></i></div>
+          <div class="action-text"><strong>Practice your story</strong> — Be ready to explain projects, tools you used, problems you solved</div>
+        </div>
+        <a href="https://drexel.edu/scdc/professional-resources/interviewing" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">Big Interview (practice tool — log in with Drexel SSO)</span>
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://drexel.edu/scdc/professional-resources/interviewing/essentials" class="resource-link" target="_blank">
+          <i class="ti ti-link icon"></i>
+          <span class="text">Drexel interviewing essentials</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+      <div class="content-section">
+        <div class="contact-info">
+          <div class="contact-label">Key contact</div>
+          <div class="contact-detail">Steinbright Career Development Center</div>
+          <div class="contact-phone">215-895-2185</div>
+          <div class="contact-detail">3201 Arch Street, Suite 110</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Checklist Section -->
+  <div class="checklist-section">
+    <div class="checklist-header" onclick="toggleChecklist(this)">
+      <span><i class="ti ti-checklist" style="margin-right: 8px; font-size: 16px; vertical-align: -2px;"></i>Progress tracker</span>
+      <div class="checklist-toggle"><i class="ti ti-chevron-down"></i></div>
+    </div>
+    <div class="checklist-content">
+      <div id="tasksList" style="padding: 16px 0;"></div>
+    </div>
+  </div>
+  
+  <div class="actions">
+    <button class="button" onclick="resetProgress()">
+      <i class="ti ti-refresh"></i> Reset
+    </button>
+    <button class="button primary" onclick="shareProgress()">
+      <i class="ti ti-share-2"></i> Share progress
+    </button>
+  </div>
+  <div class="copy-status" id="copyStatus"></div>
+</div>
+
+<script>
+const tasks = [
+  { id: 'task1', text: 'Update résumé', subtitle: 'Technical skills & projects' },
+  { id: 'task2', text: 'Polish GitHub profile', subtitle: 'Pin projects with READMEs' },
+  { id: 'task3', text: 'Set up LinkedIn', subtitle: 'Photo, skills, education visible' },
+  { id: 'task4', text: 'Log into SCDCOnline', subtitle: 'Confirm access to job search' },
+  { id: 'task5', text: 'Find co-op advisor', subtitle: 'Will be in SCDCOnline' },
+  { id: 'task6', text: 'Complete intro meeting', subtitle: 'Required for eligibility' },
+  { id: 'task7', text: 'Pick 2-3 interest areas', subtitle: 'E.g., autonomous systems, embedded, controls' },
+  { id: 'task8', text: 'Prepare interview stories', subtitle: 'Practice with Big Interview' },
+  { id: 'task9', text: 'Attend Oct 7 Virtual Fair', subtitle: 'Connect with companies' },
+  { id: 'task10', text: 'Attend Oct 14 STEM Fair', subtitle: 'Robotics companies—priority event' },
+  { id: 'task11', text: 'Attend Oct 15 All-Majors Fair', subtitle: 'Expand options' },
+  { id: 'task12', text: 'Start job search Oct 23+', subtitle: 'Apply to A-Round openings' }
+];
+
+const storage = 'coop_tracker_state';
+const apiBase = window.location.origin;
+let syncing = false;
+
+function setSyncStatus(text, synced = false) {
+  const status = document.getElementById('syncStatus');
+  status.className = synced ? 'sync-status synced' : syncing ? 'sync-status syncing' : 'sync-status';
+  status.innerHTML = `<span class="sync-indicator"></span><span>${text}</span>`;
+}
+
+async function loadStateFromServer() {
+  try {
+    const response = await fetch(`${apiBase}/api/progress`);
+    const data = await response.json();
+    
+    if (data && typeof data === 'object') {
+      Object.keys(data).forEach(id => {
+        if (data[id]) {
+          const el = document.querySelector(`[data-id="${id}"]`);
+          if (el) {
+            el.classList.add('done');
+            const icon = el.querySelector('.ti-check');
+            if (icon) icon.style.display = 'inline';
+          }
+        }
+      });
+    }
+    setSyncStatus('Synced', true);
+  } catch (error) {
+    setSyncStatus('Local storage only', false);
+  }
+}
+
+async function saveStateToServer() {
+  if (syncing) return;
+  syncing = true;
+  setSyncStatus('Syncing...', false);
+  
+  try {
+    const state = {};
+    tasks.forEach(task => {
+      const el = document.querySelector(`[data-id="${task.id}"]`);
+      state[task.id] = el && el.classList.contains('done');
+    });
+    
+    localStorage.setItem(storage, JSON.stringify(state));
+    
+    const response = await fetch(`${apiBase}/api/progress`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ state })
+    });
+    
+    if (response.ok) {
+      setSyncStatus('Synced', true);
+    } else {
+      setSyncStatus('Local storage only', false);
+    }
+  } catch (error) {
+    setSyncStatus('Local storage only', false);
+  } finally {
+    syncing = false;
+  }
+}
+
+function renderTasks() {
+  const tasksList = document.getElementById('tasksList');
+  tasksList.innerHTML = tasks.map(task => `
+    <div class="task-item" data-id="${task.id}" onclick="toggleTask(event)">
+      <div class="task-checkbox"><i class="ti ti-check" style="display:none; color: inherit;"></i></div>
+      <div class="task-content">
+        <div class="task-text">${task.text}</div>
+        <div class="task-subtitle">${task.subtitle}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleEvent(header) {
+  header.classList.toggle('open');
+}
+
+function toggleChecklist(header) {
+  header.classList.toggle('open');
+}
+
+function toggleTask(e) {
+  const item = e.currentTarget;
+  item.classList.toggle('done');
+  const icon = item.querySelector('.ti-check');
+  if (icon) {
+    icon.style.display = item.classList.contains('done') ? 'inline' : 'none';
+  }
+  updateProgress();
+  saveStateToServer();
+}
+
+async function loadState() {
+  renderTasks();
+  
+  const state = localStorage.getItem(storage);
+  if (state) {
+    try {
+      const data = JSON.parse(state);
+      Object.keys(data).forEach(id => {
+        if (data[id]) {
+          const el = document.querySelector(`[data-id="${id}"]`);
+          if (el) {
+            el.classList.add('done');
+            const icon = el.querySelector('.ti-check');
+            if (icon) icon.style.display = 'inline';
+          }
+        }
+      });
+    } catch (e) {}
+  }
+  
+  const url = new URL(window.location);
+  const shared = url.searchParams.get('state');
+  if (shared) {
+    try {
+      const data = JSON.parse(atob(shared));
+      Object.keys(data).forEach(id => {
+        if (data[id]) {
+          const el = document.querySelector(`[data-id="${id}"]`);
+          if (el) {
+            el.classList.add('done');
+            const icon = el.querySelector('.ti-check');
+            if (icon) icon.style.display = 'inline';
+          }
+        }
+      });
+    } catch (e) {}
+  }
+  
+  updateProgress();
+  await loadStateFromServer();
+}
+
+function updateProgress() {
+  const completed = document.querySelectorAll('.task-item.done').length;
+  const total = tasks.length;
+  const percent = (completed / total) * 100;
+  document.getElementById('progressFill').style.width = percent + '%';
+  document.getElementById('completedCount').textContent = completed;
+  document.getElementById('totalCount').textContent = total;
+}
+
+function shareProgress() {
+  const state = {};
+  tasks.forEach(task => {
+    const el = document.querySelector(`[data-id="${task.id}"]`);
+    state[task.id] = el && el.classList.contains('done');
+  });
+  const encoded = btoa(JSON.stringify(state));
+  const url = new URL(window.location);
+  url.searchParams.set('state', encoded);
+  
+  navigator.clipboard.writeText(url.toString()).then(() => {
+    const status = document.getElementById('copyStatus');
+    status.textContent = 'Link copied! Send it to your dad.';
+    setTimeout(() => { status.textContent = ''; }, 3000);
+  }).catch(() => {
+    alert('Link: ' + url.toString());
+  });
+}
+
+function resetProgress() {
+  if (confirm('Reset all progress?')) {
+    document.querySelectorAll('.task-item').forEach(item => {
+      item.classList.remove('done');
+      const icon = item.querySelector('.ti-check');
+      if (icon) icon.style.display = 'none';
+    });
+    localStorage.removeItem(storage);
+    updateProgress();
+    saveStateToServer();
+  }
+}
+
+loadState();
+</script>
+</body>
+</html>
