@@ -23,7 +23,7 @@ You have 3 files:
 git init
 git add .
 git commit -m "Initial co-op tracker"
-git remote add origin https://github.com/yourusername/coop-tracker.git
+git remote add origin https://github.com/mpiantella/ali-reminder.git
 git push -u origin main
 ```
 
